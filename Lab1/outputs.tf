@@ -18,3 +18,27 @@ output "api_key" {
     value = "${var.api_key}bar"
     sensitive = true
 }
+
+output "primary_region" {
+    value = var.regions[0]
+}
+
+output "primary_region_instance_count" {
+    value = var.region_instance_count["westus"]
+}
+
+output "kind" {
+    value = var.sku_settings.kind
+}
+
+output "alpha" {
+    value = module.alpha.random_string
+}
+
+output "bravo" {
+    value = module.bravo.random_string
+}
+
+output "charlie" {
+    value = module.charlie.random_string
+}

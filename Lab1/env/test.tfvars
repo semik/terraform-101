@@ -1,4 +1,4 @@
-environment_name = "dev"
+environment_name = "test"
 instance_count = 7
 enabled = true
 regions = ["westus", "eastus"]

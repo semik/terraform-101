@@ -6,47 +6,28 @@ resource "random_string" "suffix" {
 
 locals {
     environment_prefix = "${var.application_name}-${var.environment_name}-${random_string.suffix.result}"
+
+    regional_stamps = {
+      "foo" = {
+        region = "westus"
+        min_node_count = 4
+        max_node_count = 8
+      },
+      "bar" = {
+        region = "eastus"
+        min_node_count = 4
+        max_node_count = 8
+      }
+    }
 }
 
-resource "random_string" "list" {
+module "region_stamps" {
+  source = "./modules/regional-stamp"
 
-  count = length(var.regions)
+  for_each = local.regional_stamps
 
-  length = 6
-  upper = false
-  special = false
-}
-
-resource "random_string" "map" {
-
-  for_each = var.region_instance_count
-
-  length = 6
-  upper = false
-  special = false
-}
-
-resource "random_string" "if" {
-
-  count = var.enabled ? 1 : 0
-
-  length = 6
-  upper = false
-  special = false
-}
-
-module "alpha" {
-  source  = "registry.terraform.io/hashicorp/module/random"
-  version = "1.0.0"
-}
-
-module "bravo" {
-  source  = "registry.terraform.io/hashicorp/module/random"
-  version = "1.0.0"
-}
-
-module "charlie" {
-  source  = "./modules/rando"
-
-  length = 8
+  region         = each.value.region
+  name           = each.key
+  min_node_count = each.value.min_node_count
+  max_node_count = each.value.max_node_count
 }
